@@ -59,11 +59,15 @@ class Wrapper extends React.PureComponent<Props> {
   state =  { Theme: null };
 
   componentDidMount() {
-    const theme = _get(queryString.parse(location.search), 'theme')
+    const theme = _get(queryString.parse(location.search), 'theme') || sessionStorage.getItem('theme');
+
+    if (!theme) return;
 
     import(`../themes/${theme}`)
       .then(theme => this.setState({ Theme: theme.default }))
       .catch(() => {})
+
+    sessionStorage.setItem('theme', theme);
   }
 
   render = () => {
